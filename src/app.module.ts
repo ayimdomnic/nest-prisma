@@ -3,7 +3,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { join } from 'path';
-import { PrismaService } from './services/prisma.service';
 import { PrismaModule } from 'nestjs-prisma'
 import { ConfigModule } from '@nestjs/config';
 import config from './config';
@@ -26,6 +25,6 @@ import config from './config';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}

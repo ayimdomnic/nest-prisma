@@ -8,6 +8,8 @@ yarn
 
 docker-compose up -d
 
+yarn start
+
 http://localhost:3000/graphql
 
 
