@@ -35,6 +35,10 @@ mutation {
 
 ```
 
+![Register](./screenshots/register_success.png)
+![WeakPassword](./screenshots/weak_password.png)
+![Login](./screenshots/login.png)
+
 ## Result (Weak Password)
 
 ```graphql
