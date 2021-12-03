@@ -11,10 +11,12 @@ import { PasswordService } from './services/password.service';
 import { AuthResolver } from './resolvers/auth.resolver';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { GraphqlConfig, SecurityConfig } from './types';
+import { SecurityConfig } from './types';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { AppResolver } from './app.resolver';
+import { UserResolver } from './resolvers/user.resolver';
+import { UserService } from './services/user.service';
 
 @Module({
   imports: [
@@ -51,6 +53,8 @@ import { AppResolver } from './app.resolver';
     AppService,
     AppResolver,
     AuthService,
+    UserResolver,
+    UserService,
     PasswordService,
     AuthResolver,
     JwtStrategy,

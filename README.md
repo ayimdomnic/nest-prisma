@@ -100,3 +100,52 @@ mutation {
   }
 }
 ```
+
+## Authenticated User
+
+```graphql
+query {
+  getUser {
+    fullName
+    email
+    createdAt
+    updatedAt
+  }
+}
+
+```
+
+## Resutl Not Loggged In
+
+```json
+{
+  "errors": [
+    {
+      "message": "Unauthorized",
+      "extensions": {
+        "code": "UNAUTHENTICATED",
+        "response": {
+          "statusCode": 401,
+          "message": "Unauthorized"
+        }
+      }
+    }
+  ],
+  "data": null
+}
+```
+
+## Result Logged In
+
+```graphql
+{
+  "data": {
+    "getUser": {
+      "fullName": "Odhis Two",
+      "email": "odhis@app.com",
+      "createdAt": "2020-04-17T13:56:26.000Z",
+      "updatedAt": "2020-04-17T13:56:26.000Z"
+    }
+  }
+}
+```

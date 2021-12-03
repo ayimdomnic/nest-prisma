@@ -1,5 +1,7 @@
-import { Field, HideField, ID } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 
+
+@ObjectType()
 export abstract class BaseModel {
   @Field(() => ID)
   id: string;
@@ -11,6 +13,8 @@ export abstract class BaseModel {
   updatedAt: Date;
 }
 
+
+@ObjectType()
 export class User extends BaseModel {
   @Field()
   fullName: string;
