@@ -3,28 +3,58 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { join } from 'path';
-import { PrismaModule } from 'nestjs-prisma'
-import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from 'nestjs-prisma';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import config from './config';
-
+import { AuthService } from './services/auth.service';
+import { PasswordService } from './services/password.service';
+import { AuthResolver } from './resolvers/auth.resolver';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { GraphqlConfig, SecurityConfig } from './types';
+import { JwtStrategy } from './strategy/jwt.strategy';
+import { GqlAuthGuard } from './guards/gql-auth.guard';
+import { AppResolver } from './app.resolver';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [config]
+      load: [config],
+    }),
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
+    JwtModule.registerAsync({
+      useFactory: async (configService: ConfigService) => {
+        const securityConfig = configService.get<SecurityConfig>('security');
+        return {
+          secret: configService.get<string>('JWT_ACCESS_SECRET'),
+          signOptions: {
+            expiresIn: securityConfig.expiresIn,
+          },
+        };
+      },
+      inject: [ConfigService],
     }),
     GraphQLModule.forRoot({
-      autoSchemaFile: join(process.cwd(), 'schema.gql'),
-      buildSchemaOptions: { dateScalarMode: 'timestamp'},
+      debug: true,
       playground: true,
-      context: ({ req }) => ({ req }),
+      autoSchemaFile: join(process.cwd(), 'schema.gql'),
     }),
     PrismaModule.forRoot({
       isGlobal: true,
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    AppResolver,
+    AuthService,
+    PasswordService,
+    AuthResolver,
+    JwtStrategy,
+    GqlAuthGuard,
+  ],
 })
 export class AppModule {}

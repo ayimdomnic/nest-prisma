@@ -1,0 +1,35 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Token {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type Auth {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type Query {
+  hello: String!
+}
+
+type Mutation {
+  register(input: RegisterInput!): Auth!
+  login(input: LoginInput!): Auth!
+  refreshToken(refreshToken: String!): Token!
+}
+
+input RegisterInput {
+  fullName: String!
+  email: String!
+  password: String!
+  passwordConfirm: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}

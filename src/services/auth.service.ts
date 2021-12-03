@@ -22,17 +22,21 @@ export class AuthService {
     const hashedPassword = await this.passwordService.hashPassword(
       input.password,
     );
-    return this.prisma.user.create({
+    const user =  await this.prisma.user.create({
       data: {
         fullname: input.fullName,
         email: input.email,
         password: hashedPassword,
       },
     });
+
+    return this.generateToken({
+        userId: user.id,
+    })
   }
 
   async login(input: LoginInput) {
-    const user = await this.prisma.user.findOne({
+    const user = await this.prisma.user.findUnique({
       where: {
         email: input.email,
       },
