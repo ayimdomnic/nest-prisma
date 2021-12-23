@@ -17,6 +17,7 @@ import { GqlAuthGuard } from './guards/gql-auth.guard';
 import { AppResolver } from './app.resolver';
 import { UserResolver } from './resolvers/user.resolver';
 import { UserService } from './services/user.service';
+import { RequestService } from './services/request.service';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { UserService } from './services/user.service';
   providers: [
     AppService,
     AppResolver,
+    RequestService,
     AuthService,
     UserResolver,
     UserService,

@@ -1,23 +1,34 @@
 import { UseGuards } from '@nestjs/common';
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PrismaService } from 'nestjs-prisma';
 import { AuthUser } from 'src/decorators/auth.user';
-import { User } from 'src/dtos/user.dto';
+import { RequestResult, SendRequestInput } from 'src/dtos/request.dto';
+import { User } from '@prisma/client';
+import  { User as UserResult } from '../dtos/user.dto';
 import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
+import { RequestService } from 'src/services/request.service';
 import { UserService } from 'src/services/user.service';
 
-@Resolver(() => User)
+@Resolver(() => UserResult)
 export class UserResolver {
   constructor(
     private userService: UserService,
+    private readonly requestService: RequestService,
     private prisma: PrismaService,
   ) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => User, { name: 'getUser' })
+  @Query(() => UserResult, { name: 'getUser' })
   async me(@AuthUser() user: User) {
-    return this.prisma.user.findUnique({
-      where: { id: user.id },
-    });
+    return this.userService.getUser(user.id);
   }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => RequestResult)
+  async sendFriendRequest(@AuthUser() user: User, @Args('input') input: SendRequestInput) {
+    return this.requestService.sendRequest(user, input)
+  }
+  
+
+
 }

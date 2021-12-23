@@ -5,7 +5,11 @@ import { PrismaService } from 'nestjs-prisma';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getUser() {
-
+  async getUser(id: string) {
+    return this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 }

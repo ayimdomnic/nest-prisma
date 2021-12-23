@@ -25,15 +25,29 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type RequestResult {
+  id: String!
+  userId: String!
+  requesterId: String!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
 type Query {
   hello: String!
   getUser: User!
 }
 
 type Mutation {
+  sendFriendRequest(input: SendRequestInput!): RequestResult!
   register(input: RegisterInput!): Auth!
   login(input: LoginInput!): Auth!
   refreshToken(refreshToken: String!): Token!
+}
+
+input SendRequestInput {
+  userId: String!
 }
 
 input RegisterInput {

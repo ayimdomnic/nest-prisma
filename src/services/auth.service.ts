@@ -5,7 +5,7 @@ import { PasswordService } from './password.service';
 import { ConfigService } from '@nestjs/config';
 import { LoginInput, RegisterInput, Token } from 'src/dtos/auth.dto';
 import { SecurityConfig } from 'src/types';
-import { Prisma, User } from '@prisma/client'
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -16,13 +16,34 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
+  private async registerAttempt(user: User) {
+    const toLogin = await this.prisma.user.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        attempts: true,
+      },
+    });
+
+    if (toLogin.attempts.length <= Number(process.env.MAX_ATTEMPTS || 5)) {
+      await this.prisma.attempt.create({
+        data: {
+          userId: user.id,
+        },
+      });
+    }
+
+    throw new Error('Too many attempts');
+  }
+
   async createUser(input: RegisterInput) {
     if (input.password !== input.passwordConfirm)
       throw new Error('Passwords do not match');
     const hashedPassword = await this.passwordService.hashPassword(
       input.password,
     );
-    const user =  await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         fullname: input.fullName,
         email: input.email,
@@ -31,17 +52,21 @@ export class AuthService {
     });
 
     return this.generateToken({
-        userId: user.id,
-    })
+      userId: user.id,
+    });
   }
 
   async login(input: LoginInput) {
+
     const user = await this.prisma.user.findUnique({
       where: {
         email: input.email,
       },
     });
+
     if (!user) throw new Error('User not found');
+
+    await this.registerAttempt(user);
     const isPasswordValid = await this.passwordService.validatePassword(
       input.password,
       user.password,
@@ -80,7 +105,6 @@ export class AuthService {
       throw new Error('Invalid refresh token');
     }
   }
-
 
   async validateUser(userId: string): Promise<User> {
     return this.prisma.user.findUnique({ where: { id: userId } });
