@@ -145,12 +145,82 @@ query {
 {
   "data": {
     "getUser": {
-      "fullName": "Odhis Two",
-      "email": "odhis@app.com",
-      "createdAt": "2020-04-17T13:56:26.000Z",
-      "updatedAt": "2020-04-17T13:56:26.000Z"
+      "fullname": "Odhiambo Dormnic",
+      "email": "ayimdomnic++@gmail.com",
+      "status": "active",
+      "createdAt": "2021-12-23T12:18:37.629Z",
+      "updatedAt": "2021-12-23T12:18:37.630Z"
     }
   }
 }
 ```
 
+## Too Many Attempts
+
+```json
+{
+  "errors": [
+    {
+      "message": "User is blocked",
+      "locations": [
+        {
+          "line": 2,
+          "column": 3
+        }
+      ],
+      "path": [
+        "login"
+      ],
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+        "exception": {
+          "stacktrace": [
+            "Error: User is blocked",
+            "    at AuthService.login (/Users/ayim/Code/nest-prisma/src/services/auth.service.ts:77:42)",
+            "    at AuthResolver.login (/Users/ayim/Code/nest-prisma/src/resolvers/auth.resolver.ts:22:43)",
+            "    at target (/Users/ayim/Code/nest-prisma/node_modules/@nestjs/core/helpers/external-context-creator.js:77:28)",
+            "    at /Users/ayim/Code/nest-prisma/node_modules/@nestjs/core/helpers/external-proxy.js:9:24"
+          ]
+        }
+      }
+    }
+  ],
+  "data": null
+}
+
+```
+
+## Send Request
+
+
+```graphql
+mutation {
+  sendFriendRequest(input: { userId:"94f32208-9531-4446-8d4a-1aca79525428"}) {
+    id
+    status
+    requesterId
+    createdAt
+    updatedAt
+  }
+}
+
+```
+
+```json
+{
+  "errors": [
+    {
+      "message": "Unauthorized",
+      "extensions": {
+        "code": "UNAUTHENTICATED",
+        "response": {
+          "statusCode": 401,
+          "message": "Unauthorized"
+        }
+      }
+    }
+  ],
+  "data": null
+}
+
+```

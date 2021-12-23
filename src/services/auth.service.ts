@@ -26,7 +26,7 @@ export class AuthService {
       },
     });
 
-    if (toLogin.attempts.length <= Number(process.env.MAX_ATTEMPTS || 5)) {
+    if (toLogin.attempts.length >= Number(process.env.MAX_ATTEMPTS || 5)) {
       await this.prisma.attempt.create({
         data: {
           userId: user.id,
@@ -54,7 +54,7 @@ export class AuthService {
     );
     const user = await this.prisma.user.create({
       data: {
-        fullname: input.fullName,
+        fullname: input.fullname,
         email: input.email,
         password: hashedPassword,
       },
@@ -71,9 +71,10 @@ export class AuthService {
         email: input.email,
       },
     });
+    
 
     if (!user) throw new Error('User not found');
-
+    if (user.status === 'Blocked') throw new Error('User is blocked');
     await this.registerAttempt(user);
     const isPasswordValid = await this.passwordService.validatePassword(
       input.password,

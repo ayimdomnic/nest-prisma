@@ -5,7 +5,7 @@ import { User } from './user.dto';
 @InputType()
 export class RegisterInput {
   @Field(() => String)
-  fullName: string;
+  fullname: string;
 
   @Field(() => String)
   email: string;

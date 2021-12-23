@@ -15,7 +15,7 @@ export abstract class BaseModel {
 @ObjectType()
 export class User extends BaseModel {
   @Field()
-  fullName: string;
+  fullname: string;
 
   @Field()
   email: string;
