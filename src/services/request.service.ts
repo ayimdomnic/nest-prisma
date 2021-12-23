@@ -36,4 +36,27 @@ export class RequestService {
 
     return request;
   }
+
+  async acceptRequest(user: User, requestId: string, status: string) {
+    const request = await this.prisma.request.findUnique({
+      where: {
+        id: requestId,
+      },
+    });
+
+    if (request.requesterId !== user.id) {
+      throw new Error('You are not the requester');
+    }
+
+    const updatedRequest = await this.prisma.request.update({
+      where: {
+        id: requestId,
+      },
+      data: {
+        status,
+      },
+    });
+
+    return updatedRequest;
+  }
 }

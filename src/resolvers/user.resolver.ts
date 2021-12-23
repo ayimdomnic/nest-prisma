@@ -4,7 +4,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { AuthUser } from 'src/decorators/auth.user';
 import { RequestResult, SendRequestInput } from 'src/dtos/request.dto';
 import { User } from '@prisma/client';
-import  { User as UserResult } from '../dtos/user.dto';
+import { User as UserResult } from '../dtos/user.dto';
 import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
 import { RequestService } from 'src/services/request.service';
 import { UserService } from 'src/services/user.service';
@@ -25,10 +25,20 @@ export class UserResolver {
 
   @UseGuards(GqlAuthGuard)
   @Mutation(() => RequestResult)
-  async sendFriendRequest(@AuthUser() user: User, @Args('input') input: SendRequestInput) {
-    return this.requestService.sendRequest(user, input)
+  async sendFriendRequest(
+    @AuthUser() user: User,
+    @Args('input') input: SendRequestInput,
+  ) {
+    return this.requestService.sendRequest(user, input);
   }
-  
 
-
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => RequestResult, { name: 'acceptOrDeclineRequest' })
+  async acceptOrDeclineRequest(
+    @AuthUser() user: User,
+    @Args('requestId') requestId: string,
+    @Args('status') status: string,
+  ) {
+    return this.requestService.acceptRequest(user, requestId, status);
+  }
 }

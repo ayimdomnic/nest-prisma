@@ -15,6 +15,7 @@ model User {
   fullname    String
   email       String @unique
   password    String
+  status      String @default("active")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   requests Request[]

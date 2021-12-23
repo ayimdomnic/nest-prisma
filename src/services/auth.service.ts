@@ -34,6 +34,15 @@ export class AuthService {
       });
     }
 
+    //block user if attempts > max attempts
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        status: 'Blocked',
+      }
+    })
     throw new Error('Too many attempts');
   }
 
@@ -57,7 +66,6 @@ export class AuthService {
   }
 
   async login(input: LoginInput) {
-
     const user = await this.prisma.user.findUnique({
       where: {
         email: input.email,

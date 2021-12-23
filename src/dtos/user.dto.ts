@@ -1,6 +1,5 @@
 import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 
-
 @ObjectType({ isAbstract: true })
 export abstract class BaseModel {
   @Field(() => ID)
@@ -13,7 +12,6 @@ export abstract class BaseModel {
   updatedAt: Date;
 }
 
-
 @ObjectType()
 export class User extends BaseModel {
   @Field()
@@ -21,6 +19,9 @@ export class User extends BaseModel {
 
   @Field()
   email: string;
+
+  @Field()
+  status: string;
 
   @HideField()
   password: string;
